@@ -35,8 +35,14 @@ Package outputs:
 
 ## Development
 
-```bash
-nix develop      # enter the dev shell; run `menu` to list commands
-nix fmt          # nixfmt over *.nix, prettier over *.md / *.yaml
-nix flake check  # runs the treefmt check (fails on any unformatted file)
-```
+Enter the dev shell with `nix develop`; `menu` lists its commands, each
+with a one-line help:
+
+- `check`: `nix flake check`, the treefmt check and the bats suite.
+- `fmt`: nixfmt over `*.nix`, prettier over `*.md` and `*.yaml`, shfmt
+  and shellcheck over `*.sh`.
+- `design-skills test`: the bats suite under `tests/` alone.
+- `design-skills list`: the skills under `skills/`.
+- `design-skills update-locks [SKILL...]`: each skill's own `flake.lock`.
+- `update-flake`, `update-skills-devshell`: the root and dev-shell skill
+  locks.

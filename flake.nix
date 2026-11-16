@@ -62,8 +62,8 @@
         # skillspkgs / nur-packages' last-write-wins `//` merge; the
         # owner+topic name is resolvable and unique, mirroring git-skills's
         # `agent-skills-nhooey-git-all`. The aggregate carries the home-manager
-        # `isFlakeSkillsEnv` passthru itself (agent-skill-flake #47), so
-        # `default` is directly installable — no hand-rolled pack.
+        # `isFlakeSkillsEnv` passthru itself, so `default` is directly
+        # installable.
         name = "agent-skills-nhooey-software-design-all";
       };
     in
@@ -93,20 +93,74 @@
       };
       perSystem =
         { system, pkgs, ... }:
+        let
+          batsWithLibraries = pkgs.bats.withLibraries (p: [
+            p.bats-support
+            p.bats-assert
+          ]);
+
+          # The repository's own commands (test / list / update-locks). `nix`
+          # is left to the caller's PATH so the tool runs the user's Nix.
+          design-skills = pkgs.writeShellApplication {
+            name = "design-skills";
+            runtimeInputs = [
+              batsWithLibraries
+              pkgs.gawk
+              pkgs.git
+            ];
+            text = builtins.readFile ./scripts/design-skills.sh;
+          };
+        in
         {
           packages = base.packages.${system};
 
           apps = base.apps.${system};
 
-          # `nix fmt` runs nixfmt over `.nix` and prettier over `.md` / `.yaml`;
-          # the module also surfaces a `checks.${system}.treefmt` so `nix flake
-          # check` fails on any unformatted file. prettier's includes are pinned
-          # to markdown and YAML so it leaves `evals.json` (and any future JSON)
-          # alone — add formatters here as other tracked file types arrive.
+          devshells.default.commands = [
+            {
+              category = "dev";
+              name = "design-skills";
+              package = design-skills;
+              help = "Run the bats tests, list skills, update each skill's flake.lock";
+            }
+          ];
+
+          # The bats suite under tests/: each skill's frontmatter, every
+          # relative link in the tracked Markdown, and design-skills' argument
+          # parsing.
+          checks.bats =
+            pkgs.runCommand "software-design-skills-bats"
+              {
+                src = pkgs.lib.fileset.toSource {
+                  root = ./.;
+                  fileset = pkgs.lib.fileset.unions [
+                    (pkgs.lib.fileset.fileFilter (file: file.hasExt "md") ./.)
+                    ./scripts
+                    ./tests
+                  ];
+                };
+                nativeBuildInputs = [
+                  batsWithLibraries
+                  pkgs.gawk
+                ];
+              }
+              ''
+                bats --print-output-on-failure "$src/tests"
+                touch "$out"
+              '';
+
+          # `nix fmt` runs nixfmt over `.nix`, prettier over `.md` / `.yaml`, and
+          # shfmt and shellcheck over `.sh`; the module also surfaces a
+          # `checks.${system}.treefmt` so `nix flake check` fails on any
+          # unformatted file. prettier's includes are pinned to markdown and
+          # YAML so it leaves JSON files alone — add formatters here as other
+          # tracked file types arrive.
           treefmt = {
             projectRootFile = "flake.nix";
             programs.nixfmt.enable = true;
             programs.prettier.enable = true;
+            programs.shellcheck.enable = true;
+            programs.shfmt.enable = true;
             settings.formatter.prettier.includes = [
               "*.md"
               "*.yaml"
@@ -118,9 +172,8 @@
           # name, motd, the install-skills startup that reconciles the runtime
           # `skills-devshell/` sub-flake at project scope, the ci/dev/maintenance
           # command trio (check / fmt / update-flake), and the skills commands
-          # (reap-skills / update-skills-devshell). This repo adds no dev-shell
-          # packages or commands of its own, so there is no `devshells.default`
-          # block here.
+          # (reap-skills / update-skills-devshell). The `devshells.default`
+          # block above adds this repo's own design-skills tool to that menu.
         };
     };
 }
