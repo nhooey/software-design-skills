@@ -98,6 +98,31 @@
 
           apps = base.apps.${system};
 
+          # The bats suite under tests/: each skill's frontmatter and every
+          # relative link in the tracked Markdown.
+          checks.bats =
+            pkgs.runCommand "software-design-skills-bats"
+              {
+                src = pkgs.lib.fileset.toSource {
+                  root = ./.;
+                  fileset = pkgs.lib.fileset.unions [
+                    (pkgs.lib.fileset.fileFilter (file: file.hasExt "md") ./.)
+                    ./tests
+                  ];
+                };
+                nativeBuildInputs = [
+                  (pkgs.bats.withLibraries (p: [
+                    p.bats-support
+                    p.bats-assert
+                  ]))
+                  pkgs.gawk
+                ];
+              }
+              ''
+                bats --print-output-on-failure "$src/tests"
+                touch "$out"
+              '';
+
           # `nix fmt` runs nixfmt over `.nix` and prettier over `.md` / `.yaml`;
           # the module also surfaces a `checks.${system}.treefmt` so `nix flake
           # check` fails on any unformatted file. prettier's includes are pinned
