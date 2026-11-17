@@ -106,6 +106,7 @@
               batsWithLibraries
               pkgs.gawk
               pkgs.git
+              pkgs.yq-go
             ];
             text = builtins.readFile ./scripts/design-skills.sh;
           };
@@ -141,6 +142,7 @@
                 nativeBuildInputs = [
                   batsWithLibraries
                   pkgs.gawk
+                  pkgs.yq-go
                 ];
               }
               ''
