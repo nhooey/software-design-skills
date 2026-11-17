@@ -50,6 +50,7 @@ Ship two commands, or the equivalent options:
 
 - **The defaults:** print the shipped defaults file, comments and all, so a user can start from it.
 - **The effective config:** print the merged result, with the layer each value came from, such as `ui.theme = "dark"  # user: ~/.config/app/config.toml`. This answers "why is it doing that?" without reading code.
+- **A change:** show it as `key: old → new` with the layer it came from, such as `ui.theme: "light" → "dark"  # user: ~/.config/app/config.toml`, in the notation `writing-hygiene-declarative-statements` describes.
 
 ## Testing
 
@@ -112,4 +113,5 @@ missing and ask whether to install it from the same collection this skill
 came from; don't apply it from memory.
 
 - `coding-agent-skill-references`: the preferences files this skill reads, and where a user's choice goes rather than in the skill.
+- `writing-hygiene-declarative-statements`: the `key: old → new` notation for showing a config change.
 - `shell-hygiene-secrets-through-secretspec`: secrets never go in a defaults or user config file; they're read through SecretSpec.
