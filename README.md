@@ -14,12 +14,13 @@ Each skill is a self-contained directory under [`skills/`](skills/) with a
 
 ## Skills
 
-| Skill                                                                                                      | What it does                                                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`config-hygiene-shipped-defaults`](skills/config-hygiene-shipped-defaults/SKILL.md)                       | One complete, commented defaults file shipped with the application, and sparse user config merged over it, with layers, merge rules, validation, provenance and per-format trade-offs.                                                |
-| [`design-hygiene-find-implicit-models`](skills/design-hygiene-find-implicit-models/SKILL.md)               | Find the lifecycles, sources of truth, message protocols, bounds and supervisors a codebase runs without naming them, write each down with evidence, and make one explicit only where that deletes branches, flags or illegal states. |
-| [`design-hygiene-ideal-then-compromise`](skills/design-hygiene-ideal-then-compromise/SKILL.md)             | Design the ideal with no regard for the status quo, put each compromise that ships sooner to the user as a decision, and record every one taken as a plan node naming the ideal, with only a pointer to it in the code.               |
-| [`software-design-declarative-reconciliation`](skills/software-design-declarative-reconciliation/SKILL.md) | Desired state reconciled against observed state, through a semantic diff, a plan of operations with postconditions and an idempotent apply, over state in a normal form.                                                              |
+| Skill                                                                                                      | What it does                                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`config-hygiene-shipped-defaults`](skills/config-hygiene-shipped-defaults/SKILL.md)                       | One complete, commented defaults file shipped with the application, and sparse user config merged over it, with layers, merge rules, validation, provenance and per-format trade-offs.                                                        |
+| [`design-hygiene-find-implicit-models`](skills/design-hygiene-find-implicit-models/SKILL.md)               | Find the lifecycles, sources of truth, message protocols, bounds and supervisors a codebase runs without naming them, write each down with evidence, and make one explicit only where that deletes branches, flags or illegal states.         |
+| [`design-hygiene-ideal-then-compromise`](skills/design-hygiene-ideal-then-compromise/SKILL.md)             | Design the ideal with no regard for the status quo, put each compromise that ships sooner to the user as a decision, and record every one taken as a plan node naming the ideal, with only a pointer to it in the code.                       |
+| [`design-hygiene-language-choice`](skills/design-hygiene-language-choice/SKILL.md)                         | Pick the language of any program, library, service, tool or script by its role and the considerations that shift the pick, functional languages first, never by popularity, and write it as a pure functional core in a thin effectful shell. |
+| [`software-design-declarative-reconciliation`](skills/software-design-declarative-reconciliation/SKILL.md) | Desired state reconciled against observed state, through a semantic diff, a plan of operations with postconditions and an idempotent apply, over state in a normal form.                                                                      |
 
 ## Install
 
@@ -37,6 +38,7 @@ Package outputs:
 - `agent-skill-nhooey-config-hygiene-shipped-defaults`
 - `agent-skill-nhooey-design-hygiene-find-implicit-models`
 - `agent-skill-nhooey-design-hygiene-ideal-then-compromise`
+- `agent-skill-nhooey-design-hygiene-language-choice`
 - `agent-skill-nhooey-software-design-declarative-reconciliation`
 
 ## Development
