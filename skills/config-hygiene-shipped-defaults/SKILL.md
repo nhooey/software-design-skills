@@ -80,7 +80,7 @@ The preferences name the format. Where they don't, or the application already ha
 
 ## Your preferences
 
-!`cat "${CLAUDE_SKILL_DIR}/../config-hygiene-shipped-defaults.preferences.md" "${CLAUDE_PROJECT_DIR}/.agents/skills/config-hygiene-shipped-defaults.preferences.md" 2>/dev/null || true`
+!`cat "$(dirname "${CLAUDE_SKILL_DIR}")/config-hygiene-shipped-defaults.preferences.md" "${CLAUDE_PROJECT_DIR}/.agents/skills/config-hygiene-shipped-defaults.preferences.md" 2>/dev/null || true`
 
 If your agent doesn't run the line above, read these files yourself if they
 exist: `config-hygiene-shipped-defaults.preferences.md` next to this skill's folder, then

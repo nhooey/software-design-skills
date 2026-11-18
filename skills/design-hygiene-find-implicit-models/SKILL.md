@@ -104,7 +104,7 @@ Name each hit with file:line and the illegal combination it allows.
 
 ## Your preferences
 
-!`cat "${CLAUDE_SKILL_DIR}/../design-hygiene-find-implicit-models.preferences.md" "${CLAUDE_PROJECT_DIR}/.agents/skills/design-hygiene-find-implicit-models.preferences.md" 2>/dev/null || true`
+!`cat "$(dirname "${CLAUDE_SKILL_DIR}")/design-hygiene-find-implicit-models.preferences.md" "${CLAUDE_PROJECT_DIR}/.agents/skills/design-hygiene-find-implicit-models.preferences.md" 2>/dev/null || true`
 
 If your agent doesn't run the line above, read these files yourself if they
 exist: `design-hygiene-find-implicit-models.preferences.md` next to this skill's folder, then

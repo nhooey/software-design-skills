@@ -126,8 +126,8 @@
           ];
 
           # The bats suite under tests/: each skill's frontmatter, every
-          # relative link in the tracked Markdown, and design-skills' argument
-          # parsing.
+          # relative link in the tracked Markdown, each preferences section's
+          # command line, and design-skills' argument parsing.
           checks.bats =
             pkgs.runCommand "software-design-skills-bats"
               {
