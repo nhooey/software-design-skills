@@ -74,8 +74,7 @@
         # (motd, install-skills startup, the ci/dev/maintenance command trio,
         # and the reap-skills/update-skills-devshell pair). Configured via the
         # `agent-skill-flake.devshellSkills` options block below. The dev-shell
-        # skill set (the git/GitHub pack plus skillspkgs' `authoring`
-        # combination) is defined in the runtime `skills-devshell/` sub-flake
+        # skill set (skillspkgs' `skill-collections` combination) is defined in the runtime `skills-devshell/` sub-flake
         # and invoked at RUNTIME, never as a root input, so this repo keeps zero
         # skill inputs in its own lock.
         inputs.agent-skill-flake.flakeModules.devshellSkills
@@ -107,6 +106,7 @@
               batsWithLibraries
               pkgs.gawk
               pkgs.git
+              pkgs.yq-go
             ];
             text = builtins.readFile ./scripts/design-skills.sh;
           };
@@ -126,8 +126,8 @@
           ];
 
           # The bats suite under tests/: each skill's frontmatter, every
-          # relative link in the tracked Markdown, and design-skills' argument
-          # parsing.
+          # relative link in the tracked Markdown, each preferences section's
+          # command line, and design-skills' argument parsing.
           checks.bats =
             pkgs.runCommand "software-design-skills-bats"
               {
@@ -142,6 +142,7 @@
                 nativeBuildInputs = [
                   batsWithLibraries
                   pkgs.gawk
+                  pkgs.yq-go
                 ];
               }
               ''
