@@ -1,6 +1,6 @@
 ---
 name: config-hygiene-shipped-defaults
-description: Give an application one complete defaults file that ships with it and lists every setting with its default and a comment, and a user config that names only what it changes and is merged over the defaults. Covers where defaults live (never in code), the merge rules (maps merge, lists replace, how to unset), layering (defaults, system, user, project, environment, flags), validation and unknown keys, showing the effective config and where each value came from, testing that the defaults file is complete, and choosing a format, with how TOML, YAML, JSON and others differ for this job. The user's preferences pick the format and the other house rules. Use when adding configuration to an application or tool, adding or renaming a setting, reviewing how a program reads its config, or when defaults are scattered through code or copied into users' files.
+description: Give an application one complete defaults file that ships with it and lists every setting with its default and a comment, and a user config that names only what it changes and is merged over the defaults. Covers where defaults live (never in code), the merge rules (maps merge, lists replace, how to unset), named things as definitions in a map keyed by alias and uses that list aliases in order, layering (defaults, system, user, project, environment, flags), validation and unknown keys, showing the effective config and where each value came from, testing that the defaults file is complete, and choosing a format, with how TOML, YAML, JSON and others differ for this job. The user's preferences pick the format and the other house rules. Use when adding configuration to an application or tool, adding or renaming a setting, reviewing how a program reads its config, or when defaults are scattered through code or copied into users' files.
 ---
 
 # Complete shipped defaults, sparse user overrides
@@ -34,14 +34,67 @@ Use only the layers the application needs; a tool with no projects has no projec
 
 - **Maps merge key by key, recursively:** a user who sets one key in a section keeps the section's other defaults.
 - **Lists replace whole:** a list in a later layer replaces the earlier list. Appending looks friendly but leaves no way to remove a default entry, and two layers appending give an order nobody chose.
-- **When users need to change one entry, make it a map:** a list of named things, such as servers, profiles or rules, becomes a map keyed by name, so a user can override or disable one entry without restating the rest. Give each entry an `enabled` key rather than relying on deletion.
+- **Named things are definitions and uses:** see [Named things](#named-things).
 - **Unsetting needs a spelling:** a user may need to clear a default that has a value. Formats with a null use it to mean "no value"; formats without one, such as TOML, need an explicit value the setting documents, such as an empty string or `"none"`. Never treat a missing key as "unset": missing means "use the default".
 - **Scalars replace:** a later string, number or boolean replaces the earlier one, after type checking.
+
+### Named things
+
+A collection of named things, such as rows, columns, servers or profiles, is split into the things' definitions and the places that use them:
+
+- **Definitions are a map keyed by alias:** each thing is defined once, under its alias as a map key, and the value holds the thing's own settings. Definitions merge key by key across layers, so a user changes one setting of one thing without restating the rest.
+- **Uses are a list, or an ordered map, of aliases:** wherever the application draws or applies a selection of those things in order, such as a place on screen, a pipeline or a menu, that selection is a list of aliases, or an ordered map from alias to settings that belong to that use only. Presence in a use enables the thing there, and position orders it. There is no `enabled` key: on and off have one spelling, presence.
+- **Uses replace whole:** a layer that writes a use restates it whole, list or ordered map alike, because a merge can't reorder or remove an entry. A user who writes a use stops following later default additions to it, and the defaults file's comment on each use says so.
+- **An ordered map needs a format that keeps key order:** YAML and JSON, as most libraries parse them, keep insertion order, but JavaScript objects put integer-like keys first, so aliases are words. In YAML a bare `alias:` with no value is null; in a use's ordered map it means "present, with no use-specific settings", never removal.
+- **An open set the user adds to,** such as user-defined servers: the definitions are still a map keyed by name, the uses rule still applies, and there is still no `enabled` key.
+
+The defaults file:
+
+```yaml
+# Definitions: each row's own settings, merged key by key.
+rows:
+  cpu:
+    label: CPU
+    format: percent
+  memory:
+    label: Memory
+    format: bytes
+  disk:
+    label: Disk
+    format: bytes
+
+# A use as an ordered map: the rows shown in the band, in order, each
+# with settings for the band only. A layer that sets `band` replaces it
+# whole, and stops following rows added to it by later defaults.
+band:
+  cpu:
+    width: 12
+  memory:
+
+# A use as a plain list: the rows shown in the footer, in order. A layer
+# that sets `footer` replaces it whole. Also available: memory.
+footer:
+  - disk
+  - cpu
+```
+
+A user's file that shows memory as a percentage and drops cpu from the footer:
+
+```yaml
+rows:
+  memory:
+    format: percent
+footer:
+  - disk
+```
+
+In JSONC the shape is the same: `"band": { "cpu": { "width": 12 }, "memory": null }` for the ordered map, `{}` serving as well as `null` for "no use-specific settings", and `"footer": ["disk", "cpu"]` for the list.
 
 ## Validation
 
 - **Validate the merged result** against one schema, so every layer is held to the same types and ranges, and report the file and key of the bad value.
 - **Unknown keys are reported:** a misspelt key in a user's file otherwise silently does nothing. Fail on an unknown key or warn about it, as the preferences say, and suggest the closest known key.
+- **Aliases are checked:** an unknown alias in a use, an alias repeated in one use, and, where the set of aliases is closed, a definition key that is no known alias are errors, each naming the nearest known alias.
 - **Deprecated keys keep working for a while:** read the old name, warn with the new one, and map it in the merge, until a stated version.
 
 ## Seeing what's in effect
@@ -56,8 +109,9 @@ Ship two commands, or the equivalent options:
 
 - **The defaults file parses and passes the schema.**
 - **It's complete:** every key the schema defines is in the defaults file, and every key in the file is in the schema. Where the code reads keys through one accessor, check the keys it reads against the file too.
+- **Every alias is accounted for:** every known alias has a definition in the defaults file, and appears in each use's default or is named in that use's comment.
 - **Every key has a comment**, in formats that allow comments.
-- **The merge rules hold:** a sparse user file changes only its keys, a list replaces, a map entry overrides by name, and the unset spelling clears a value.
+- **The merge rules hold:** a sparse user file changes only its keys, a list replaces, a definition's setting overrides by alias, a use replaces whole, and the unset spelling clears a value.
 - **An empty user config is valid** and gives exactly the defaults.
 
 ## Choosing a format
