@@ -92,6 +92,7 @@ In JSONC the shape is the same: `"band": { "cpu": { "width": 12 }, "memory": nul
 
 ## Validation
 
+- **Values in messages are quoted:** a warning, error or log line shows each string value double-quoted with its escapes, as in `"rows.turn.live" must be one of "never", "running", "always"`, so an empty string, a newline or stray spaces show as `""`, `"\n"` or `"  x"`, null stays `null`, and no value reads as part of the sentence.
 - **Validate the merged result** against one schema, so every layer is held to the same types and ranges, and report the file and key of the bad value.
 - **Unknown keys are reported:** a misspelt key in a user's file otherwise silently does nothing. Fail on an unknown key or warn about it, as the preferences say, and suggest the closest known key.
 - **Aliases are checked:** an unknown alias in a use, an alias repeated in one use, and, where the set of aliases is closed, a definition key that is no known alias are errors, each naming the nearest known alias.
