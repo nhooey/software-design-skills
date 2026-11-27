@@ -1,5 +1,5 @@
 {
-  description = "design-hygiene-one-list-element-per-line: Agent skill — write a list, array or set literal of more than one element in code or config one element per line, and keep it that way under nixfmt, prettier, black and ruff";
+  description = "design-hygiene-line-breaks-for-reading: Agent skill — break lines for the reader, never pack items onto a line to save lines or by width, keep config and manifest list literals one element per line, and keep it that way under nixfmt, prettier, black and ruff";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,7 +12,7 @@
     agent-skill-flake.lib.mkSkillFlake {
       inherit nixpkgs;
       source = import ../../source.nix;
-      skillName = "design-hygiene-one-list-element-per-line";
+      skillName = "design-hygiene-line-breaks-for-reading";
       src = ./.;
     };
 }
