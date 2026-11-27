@@ -21,7 +21,6 @@ Each skill is a self-contained directory under [`skills/`](skills/) with a
 | [`design-hygiene-ideal-then-compromise`](skills/design-hygiene-ideal-then-compromise/SKILL.md)                       | Design the ideal with no regard for the status quo, put each compromise that ships sooner to the user as a decision, and record every one taken as a plan node naming the ideal, with only a pointer to it in the code.                       |
 | [`design-hygiene-language-choice`](skills/design-hygiene-language-choice/SKILL.md)                                   | Pick the language of any program, library, service, tool or script by its role and the considerations that shift the pick, functional languages first, never by popularity, and write it as a pure functional core in a thin effectful shell. |
 | [`design-hygiene-names-from-precedent`](skills/design-hygiene-names-from-precedent/SKILL.md)                         | Before coining a name for a tool, option, file, package or concept, find what the wider ecosystem and the immediate stack already call it, and use that name with its meaning, showing the precedent beside each proposal.                    |
-| [`design-hygiene-one-list-element-per-line`](skills/design-hygiene-one-list-element-per-line/SKILL.md)               | Write a list, array or set literal of more than one element in code or config one element per line, never packed by line width, and keep it that way under the project's formatter.                                                           |
 | [`design-hygiene-parsers-over-regular-expressions`](skills/design-hygiene-parsers-over-regular-expressions/SKILL.md) | Read, edit and write structured text with the format's own parser and serializer for the language at hand, never a regular expression, awk or a string template, with a table of parsers per format and checks to enforce it.                 |
 | [`design-hygiene-refactoring-and-prefactoring`](skills/design-hygiene-refactoring-and-prefactoring/SKILL.md)         | Refactor at the points the project has chosen, before every change, before plans, when the change is hard, occasionally or only when asked, asking once and saving the answer, never changing behaviour and never in the change's own commit. |
 | [`software-design-declarative-reconciliation`](skills/software-design-declarative-reconciliation/SKILL.md)           | Desired state reconciled against observed state, through a semantic diff, a plan of operations with postconditions and an idempotent apply, over state in a normal form.                                                                      |
@@ -44,7 +43,6 @@ Package outputs:
 - `agent-skill-nhooey-design-hygiene-ideal-then-compromise`
 - `agent-skill-nhooey-design-hygiene-language-choice`
 - `agent-skill-nhooey-design-hygiene-names-from-precedent`
-- `agent-skill-nhooey-design-hygiene-one-list-element-per-line`
 - `agent-skill-nhooey-design-hygiene-parsers-over-regular-expressions`
 - `agent-skill-nhooey-design-hygiene-refactoring-and-prefactoring`
 - `agent-skill-nhooey-software-design-declarative-reconciliation`
